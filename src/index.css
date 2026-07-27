@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-cozy-light: #fdfbf7;
+  --color-cozy-dark: #2d333b;
+  --color-cozy-primary: #ff8a8a;
+  --color-cozy-accent: #8ab4f8;
+  --font-display: "Playfair Display", serif;
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-mono: 'Courier Prime', monospace;
+}
+
+@utility drop-shadow-flat {
+  filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.2));
+}
+
+@utility drop-shadow-flat-hover {
+  filter: drop-shadow(6px 6px 0px rgba(0, 0, 0, 0.2));
+}
+
+@utility custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+  .dark &::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+@utility custom-scrollbar {
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 0 16px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(200, 76, 48, 0.15); /* Light red tint matching theme */
+    border-radius: 10px;
+  }
+  .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(200, 76, 48, 0.3);
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-cozy-light text-cozy-dark font-sans antialiased transition-colors duration-300;
+  }
+  .dark body {
+    @apply bg-cozy-dark text-cozy-light;
+  }
+}
+
+@keyframes bobbing {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bobbing {
+  animation: bobbing 3s ease-in-out infinite;
+}
