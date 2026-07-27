@@ -86,7 +86,7 @@ export default function Home() {
           <DesktopIcon 
             icon={Users} 
             label="Join Community" 
-            onClick={() => openModal('dashboard')} 
+            onClick={() => window.open('https://discord.gg/CMegRgSgM', '_blank')} 
           />
           <DesktopIcon 
             icon={Cpu} 
