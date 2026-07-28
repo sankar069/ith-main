@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Briefcase, Activity } from 'lucide-react'
+import ScrollRevealText from '../components/ScrollRevealText'
 
 const CountUp = ({ end, prefix = "", suffix = "", isVisible, duration = 2000 }) => {
   const [count, setCount] = useState(0)
@@ -85,9 +86,16 @@ export default function BusinessModelSection() {
           Revenue Built on <span className="text-[#c84c30] italic font-serif">Real Value</span>
         </h2>
         
-        <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 font-sans mb-8 leading-relaxed">
-          Already generated <strong className="text-cozy-dark dark:text-cozy-light font-semibold">₹2.4 Lakhs+ revenue</strong>, fully reinvested into events, hackathons, and product. Our promise: keep student platform fees ultra-low — and zero where possible.
-        </p>
+        <ScrollRevealText
+          baseOpacity={0.05}
+          enableBlur={true}
+          baseRotation={2}
+          blurStrength={5}
+          containerClassName="mb-8"
+          textClassName="!text-sm md:!text-base !text-gray-500 dark:!text-gray-400 !font-sans !leading-relaxed !font-normal"
+        >
+          Already generated ₹2.4 Lakhs+ revenue, fully reinvested into events, hackathons, and product. Our promise: keep student platform fees ultra-low — and zero where possible.
+        </ScrollRevealText>
 
         <div className="flex flex-wrap gap-2.5">
           {revenuePills.map((pill, i) => (

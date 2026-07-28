@@ -1,4 +1,5 @@
 import React from 'react'
+import ScrollRevealText from '../components/ScrollRevealText'
 import { 
   LogIn, 
   UserPlus, 
@@ -70,10 +71,17 @@ export default function OfficialEventPlatformSection() {
         InnoTech-Hub <span className="text-[#c84c30] italic font-serif">Official</span> Event Platform
       </h2>
 
-      {/* Description */}
-      <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 max-w-3xl text-center leading-relaxed font-sans mb-10">
-        Created and managed only by the InnoTech-Hub team. Not an open SaaS for external colleges to host events — we run our own official events end-to-end.
-      </p>
+      <div className="max-w-3xl text-center mb-10">
+        <ScrollRevealText
+          baseOpacity={0.05}
+          enableBlur={true}
+          baseRotation={2}
+          blurStrength={5}
+          textClassName="!text-sm md:!text-base !text-gray-600 dark:!text-gray-300 !leading-relaxed !font-sans !font-normal"
+        >
+          Created and managed only by the InnoTech-Hub team. Not an open SaaS for external colleges to host events — we run our own official events end-to-end.
+        </ScrollRevealText>
+      </div>
 
       {/* Buttons */}
       <div className="flex flex-wrap justify-center gap-4 mb-16">

@@ -1,36 +1,45 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function ScrollReveal({ children, className = "", delay = 0 }) {
-  const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
+    const el = ref.current;
+    if (!el) return;
+
+    // Set initial state
+    gsap.set(el, {
+      opacity: 0,
+      y: 60,
+      scale: 0.97,
+    });
+
+    const ctx = gsap.context(() => {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1.2,
+        delay: delay / 1000,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top bottom-=80',
+          end: 'top center',
+          toggleActions: 'play none none none',
         }
-      },
-      { 
-        threshold: 0.1,
-        rootMargin: "50px"
-      }
-    );
-    
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-    
-    return () => observer.disconnect();
-  }, []);
+      });
+    }, el);
+
+    return () => ctx.revert();
+  }, [delay]);
 
   return (
-    <div 
-      ref={ref} 
-      style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} ${className}`}
-    >
+    <div ref={ref} className={className}>
       {children}
     </div>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import ScrollRevealText from '../components/ScrollRevealText'
 import { 
   Bot, 
   Compass, 
@@ -64,10 +65,17 @@ export default function AISuiteSection() {
         AI-Powered <span className="text-[#c84c30] italic font-serif">Student Growth</span> Tools
       </h2>
 
-      {/* Subtitle */}
-      <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 text-center font-sans mb-12 max-w-2xl">
-        AI guides students before, during, and after every event.
-      </p>
+      <div className="max-w-2xl text-center mb-12">
+        <ScrollRevealText
+          baseOpacity={0.05}
+          enableBlur={true}
+          baseRotation={2}
+          blurStrength={5}
+          textClassName="!text-sm md:!text-base !text-gray-500 dark:!text-gray-400 !font-sans !font-normal"
+        >
+          AI guides students before, during, and after every event.
+        </ScrollRevealText>
+      </div>
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">

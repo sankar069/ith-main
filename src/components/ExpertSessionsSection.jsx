@@ -1,5 +1,6 @@
 import React from 'react'
 import { Video, Podcast, Check } from 'lucide-react'
+import ScrollRevealText from '../components/ScrollRevealText'
 
 export default function ExpertSessionsSection() {
   const sessionCol1 = [
@@ -42,9 +43,16 @@ export default function ExpertSessionsSection() {
             Short, Powerful, <span className="text-[#c84c30] italic">30-45 min</span>
           </h3>
           
-          <p className="text-sm text-gray-500 dark:text-gray-400 font-sans mb-8 leading-relaxed pr-4">
+          <ScrollRevealText
+            baseOpacity={0.05}
+            enableBlur={true}
+            baseRotation={2}
+            blurStrength={5}
+            containerClassName="mb-8"
+            textClassName="!text-sm !text-gray-500 dark:!text-gray-400 !font-sans !leading-relaxed !font-normal"
+          >
             Expert-led by professionals, founders, developers, designers, recruiters, AI engineers, and achievers. Practical outcomes over long theoretical webinars.
-          </p>
+          </ScrollRevealText>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-2">
             <div className="space-y-3">
@@ -78,9 +86,16 @@ export default function ExpertSessionsSection() {
             Voices of Real <span className="text-[#c84c30] italic">Tech Achievers</span>
           </h3>
           
-          <p className="text-sm text-gray-500 dark:text-gray-400 font-sans mb-8 leading-relaxed pr-4">
+          <ScrollRevealText
+            baseOpacity={0.05}
+            enableBlur={true}
+            baseRotation={2}
+            blurStrength={5}
+            containerClassName="mb-8"
+            textClassName="!text-sm !text-gray-500 dark:!text-gray-400 !font-sans !leading-relaxed !font-normal"
+          >
             Interviews with national-level hackathon winners, coding champions, student innovators, and open-source contributors — so budding students learn from real journeys.
-          </p>
+          </ScrollRevealText>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-auto">
             {podcastGuests.map((item, i) => (

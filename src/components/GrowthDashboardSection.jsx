@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { BarChart2, TrendingUp } from 'lucide-react'
 import { useAppStore } from '../store/useAppStore'
+import ScrollRevealText from '../components/ScrollRevealText'
 
 export default function GrowthDashboardSection() {
   const { openModal } = useAppStore()
@@ -60,10 +61,17 @@ export default function GrowthDashboardSection() {
         Student <span className="text-[#c84c30] italic font-serif">Growth</span> Dashboard
       </h2>
 
-      {/* Subtitle */}
-      <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 text-center font-sans mb-12 max-w-2xl">
-        Every student gets a personal dashboard — events become growth insights, not just history.
-      </p>
+      <div className="max-w-2xl text-center mb-12">
+        <ScrollRevealText
+          baseOpacity={0.05}
+          enableBlur={true}
+          baseRotation={2}
+          blurStrength={5}
+          textClassName="!text-sm md:!text-base !text-gray-500 dark:!text-gray-400 !font-sans !font-normal"
+        >
+          Every student gets a personal dashboard — events become growth insights, not just history.
+        </ScrollRevealText>
+      </div>
 
       {/* Two Cards Container */}
       <div className="flex flex-col lg:flex-row gap-6 w-full max-w-5xl mb-12">

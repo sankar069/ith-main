@@ -1,5 +1,6 @@
 import React from 'react'
 import { X, Check } from 'lucide-react'
+import ScrollRevealText from '../components/ScrollRevealText'
 
 export default function CultureComparisonSection() {
   const normalEvents = [
@@ -37,10 +38,17 @@ export default function CultureComparisonSection() {
         Born from the <span className="text-[#c84c30] italic font-serif">student perspective</span>
       </h2>
 
-      {/* Description */}
-      <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 max-w-3xl text-center leading-relaxed font-sans mb-16">
-        Hackathons for branding. Webinars without depth. Summits for professionals only. Podcasts that ignored student innovators. We're rewriting the rulebook.
-      </p>
+      <div className="max-w-3xl text-center mb-16">
+        <ScrollRevealText
+          baseOpacity={0.05}
+          enableBlur={true}
+          baseRotation={2}
+          blurStrength={5}
+          textClassName="!text-sm md:!text-base !text-gray-600 dark:!text-gray-300 !leading-relaxed !font-sans !font-normal"
+        >
+          Hackathons for branding. Webinars without depth. Summits for professionals only. Podcasts that ignored student innovators. We're rewriting the rulebook.
+        </ScrollRevealText>
+      </div>
 
       {/* Comparison Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl">

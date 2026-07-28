@@ -24,7 +24,7 @@ export default function PixelFooter() {
         </p>
 
         {/* Contact Form */}
-        <div className="w-full bg-[#f4ebd8] border-4 border-black shadow-[12px_12px_0_0_#000] p-6 md:p-10 flex flex-col gap-6">
+        <div id="contact-section" className="w-full bg-[#f4ebd8] border-4 border-black shadow-[12px_12px_0_0_#000] p-6 md:p-10 flex flex-col gap-6">
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-2">

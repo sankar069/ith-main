@@ -1,5 +1,6 @@
 import React from 'react'
 import { ClipboardList, MapPin, FolderOpen, BellRing, Check } from 'lucide-react'
+import ScrollRevealText from '../components/ScrollRevealText'
 
 export default function ProductsSaaSSection() {
   const products = [
@@ -75,9 +76,17 @@ export default function ProductsSaaSSection() {
       </h2>
 
       {/* Subtitle */}
-      <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 text-center font-sans mb-12 max-w-3xl leading-relaxed">
-        Modular SaaS for clubs, teams, colleges, and smart campus operations. The official event platform stays internal — these products power our clients.
-      </p>
+      <div className="max-w-3xl text-center mb-12">
+        <ScrollRevealText
+          baseOpacity={0.05}
+          enableBlur={true}
+          baseRotation={2}
+          blurStrength={5}
+          textClassName="!text-sm md:!text-base !text-gray-500 dark:!text-gray-400 !font-sans !leading-relaxed !font-normal"
+        >
+          Modular SaaS for clubs, teams, colleges, and smart campus operations. The official event platform stays internal — these products power our clients.
+        </ScrollRevealText>
+      </div>
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">

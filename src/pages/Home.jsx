@@ -7,6 +7,8 @@ import CozyModal from '../components/CozyModal'
 import Mascot from '../components/Mascot'
 import EventDiscovery from './EventDiscovery'
 import StudentDashboard from './StudentDashboard'
+import JoinCommunity from './JoinCommunity'
+import SaaSProducts from './SaaSProducts'
 import TractionTelemetry from '../components/TractionTelemetry'
 import AboutSection from '../components/AboutSection'
 import CultureComparisonSection from '../components/CultureComparisonSection'
@@ -86,22 +88,22 @@ export default function Home() {
           <DesktopIcon 
             icon={Users} 
             label="Join Community" 
-            onClick={() => window.open('https://discord.gg/CMegRgSgM', '_blank')} 
+            onClick={() => openModal('community')} 
           />
           <DesktopIcon 
             icon={Cpu} 
             label="View SaaS" 
-            onClick={() => openModal('projects')} 
+            onClick={() => openModal('saas')} 
           />
           <DesktopIcon 
             icon={Handshake} 
             label="Partner With Us" 
-            onClick={() => openModal('about')} 
+            onClick={() => document.getElementById('contact-section')?.scrollIntoView({behavior: 'smooth'})} 
           />
           <DesktopIcon 
             icon={Rocket} 
             label="Enter Event Platform" 
-            onClick={() => openModal('platform')} 
+            onClick={() => window.location.href = '/login'} 
           />
         </div>
       </section>
@@ -289,6 +291,22 @@ export default function Home() {
             <li>live sessions</li>
           </ul>
         </div>
+      </CozyModal>
+
+      <CozyModal 
+        title="discord.exe" 
+        isOpen={openModals.includes('community')} 
+        onClose={() => closeModal('community')}
+      >
+        <JoinCommunity />
+      </CozyModal>
+
+      <CozyModal 
+        title="saas_suite.exe" 
+        isOpen={openModals.includes('saas')} 
+        onClose={() => closeModal('saas')}
+      >
+        <SaaSProducts />
       </CozyModal>
 
       <Mascot />

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Target, Users, Wrench, Sparkles } from 'lucide-react'
+import ScrollRevealText from '../components/ScrollRevealText'
 
 export default function AboutSection() {
   return (
@@ -15,10 +16,19 @@ export default function AboutSection() {
         Building the <span className="text-[#c84c30] italic font-serif">Future</span>, Together
       </h2>
 
-      {/* Description */}
-      <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 max-w-4xl text-center leading-relaxed font-sans mb-16">
-        We noticed many events were branding-focused, theoretical, or expensive — and certificates rarely proved real skill. So we built a student-first ecosystem where every event becomes a learning journey, and every certificate becomes proof.
-      </p>
+      {/* Description with ScrollRevealText */}
+      <div className="max-w-4xl text-center mb-16">
+        <ScrollRevealText
+          baseOpacity={0.05}
+          enableBlur={true}
+          baseRotation={2}
+          blurStrength={5}
+          containerClassName=""
+          textClassName="!text-sm md:!text-base !text-gray-600 dark:!text-gray-300 !leading-relaxed !font-sans !font-normal"
+        >
+          We noticed many events were branding-focused, theoretical, or expensive — and certificates rarely proved real skill. So we built a student-first ecosystem where every event becomes a learning journey, and every certificate becomes proof.
+        </ScrollRevealText>
+      </div>
 
       {/* Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 w-full max-w-7xl">

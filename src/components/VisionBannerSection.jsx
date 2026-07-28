@@ -1,6 +1,7 @@
 import React from 'react'
 import { LayoutDashboard } from 'lucide-react'
 import ScrollReveal from '../components/ScrollReveal'
+import ScrollRevealText from '../components/ScrollRevealText'
 
 export default function VisionBannerSection() {
   return (
@@ -11,13 +12,17 @@ export default function VisionBannerSection() {
           <LayoutDashboard className="w-8 h-8 text-[#c84c30] stroke-[1.5]" />
         </div>
 
-        {/* Main Quote */}
-        <h2 className="text-3xl md:text-5xl font-display font-bold text-cozy-dark dark:text-cozy-light leading-snug md:leading-tight mb-6">
-          Events bring students in.<br />
-          AI tools help them <span className="text-[#c84c30] italic font-serif">grow</span>.<br />
-          SaaS helps institutions operate<br />
-          <span className="text-[#c84c30] italic font-serif">smarter</span>.
-        </h2>
+        {/* Main Quote - ScrollRevealText for word-by-word reveal */}
+        <ScrollRevealText
+          baseOpacity={0}
+          enableBlur={true}
+          baseRotation={3}
+          blurStrength={6}
+          containerClassName="mb-6"
+          textClassName="!text-3xl md:!text-5xl !font-bold text-cozy-dark dark:text-cozy-light !leading-snug md:!leading-tight"
+        >
+          Events bring students in. AI tools help them grow. SaaS helps institutions operate smarter.
+        </ScrollRevealText>
 
         {/* Subtitle */}
         <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 font-sans leading-relaxed max-w-xl">

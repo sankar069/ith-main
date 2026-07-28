@@ -1,5 +1,6 @@
 import React from 'react'
 import { Search } from 'lucide-react'
+import ScrollRevealText from '../components/ScrollRevealText'
 
 export default function EventFlowSection() {
   const steps = [
@@ -29,10 +30,17 @@ export default function EventFlowSection() {
         Event Flow — <span className="font-serif">The Racing Track</span>
       </h2>
 
-      {/* Description */}
-      <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 text-center font-sans mb-16">
-        Every student journey from start grid to podium.
-      </p>
+      <div className="text-center mb-16">
+        <ScrollRevealText
+          baseOpacity={0.05}
+          enableBlur={true}
+          baseRotation={2}
+          blurStrength={5}
+          textClassName="!text-sm md:!text-base !text-gray-500 dark:!text-gray-400 !font-sans !font-normal"
+        >
+          Every student journey from start grid to podium.
+        </ScrollRevealText>
+      </div>
 
       {/* Horizontal Timeline */}
       <div className="w-full max-w-6xl overflow-x-auto pb-8 custom-scrollbar">
