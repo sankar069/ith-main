@@ -75,3 +75,11 @@
 .animate-bobbing {
   animation: bobbing 3s ease-in-out infinite;
 }
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

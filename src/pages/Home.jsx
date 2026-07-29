@@ -1,16 +1,9 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Calendar, Users, Cpu, Handshake, Rocket, Moon, Sun } from 'lucide-react'
+import React, { useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Calendar, Users, Cpu, Handshake, Rocket } from 'lucide-react'
 import ScrollReveal from '../components/ScrollReveal'
-import NavigationBar from '../components/NavigationBar'
 import { useAppStore } from '../store/useAppStore'
 import DesktopIcon from '../components/DesktopIcon'
-import CozyModal from '../components/CozyModal'
-import Mascot from '../components/Mascot'
-import EventDiscovery from './EventDiscovery'
-import StudentDashboard from './StudentDashboard'
-import JoinCommunity from './JoinCommunity'
-import SaaSProducts from './SaaSProducts'
 import TractionTelemetry from '../components/TractionTelemetry'
 import AboutSection from '../components/AboutSection'
 import CultureComparisonSection from '../components/CultureComparisonSection'
@@ -29,20 +22,27 @@ import MediaOutreachSection from '../components/MediaOutreachSection'
 import VisionBannerSection from '../components/VisionBannerSection'
 import PartnersSponsorsSection from '../components/PartnersSponsorsSection'
 import ContactSection from '../components/ContactSection'
-import PixelFooter from '../components/PixelFooter'
 import CircularGallery from '../components/CircularGallery'
-import JoinUsModal from '../components/JoinUsModal'
 
 export default function Home() {
   const navigate = useNavigate()
-  const { isDarkMode, toggleDarkMode, openModals, openModal, closeModal } = useAppStore()
+  const location = useLocation()
+  const { isDarkMode, openModal } = useAppStore()
+
+  useEffect(() => {
+    const hash = location.hash.replace('#', '')
+    if (!hash) return
+    const timer = setTimeout(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' })
+    }, 150)
+    return () => clearTimeout(timer)
+  }, [location.hash])
 
   return (
-    <div className="w-full flex flex-col relative overflow-x-hidden min-h-screen">
-      <NavigationBar />
+    <div className="w-full flex flex-col relative overflow-x-hidden">
       
-      {/* Slide 1: Hero Section */}
-      <section id="home" className="w-full flex flex-col items-center justify-start relative pt-[15vh] pb-12 overflow-hidden">
+      {/* Hero Section — landing page only */}
+      <section id="home" className="w-full flex flex-col items-center justify-start relative pt-28 md:pt-32 pb-12 overflow-hidden min-h-[85vh]">
         
         {/* Background Video with Smooth Edge Fade */}
         <div className="absolute inset-0 w-full h-full -z-20">
@@ -62,27 +62,17 @@ export default function Home() {
         </div>
 
         {/* Background Graphic / Greeting */}
-        <div className="flex flex-col items-center animate-bobbing px-4 relative z-10">
-          <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cozy-dark/20 dark:border-cozy-light/20 bg-white/50 dark:bg-black/20 text-xs font-semibold tracking-wider text-cozy-dark/80 dark:text-cozy-light/80">
+        <div className="flex flex-col items-center animate-bobbing px-4 relative z-10 max-w-3xl">
+          <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/40 bg-white/70 dark:bg-black/30 backdrop-blur-sm text-xs font-semibold tracking-wider text-cozy-dark/90 dark:text-cozy-light/90 shadow-sm">
             ✨ GLOBAL TECH EVENTS & SAAS INNOVATION PLATFORM
           </div>
-          <h1 className="text-4xl md:text-6xl font-display font-bold text-cozy-dark dark:text-cozy-light drop-shadow-sm text-center">
+          <h1 className="text-4xl md:text-6xl font-display font-bold text-cozy-dark dark:text-cozy-light text-center drop-shadow-[0_2px_12px_rgba(255,255,255,0.8)]">
             Where Innovation <br/>Meets <span className="text-cozy-primary italic font-serif">Community</span>
           </h1>
-          <p className="mt-4 text-sm md:text-base font-mono text-cozy-dark/80 dark:text-cozy-light/80 text-center max-w-2xl px-4 leading-relaxed">
+          <p className="mt-4 text-sm md:text-base font-mono text-cozy-dark/90 dark:text-cozy-light/90 text-center max-w-2xl px-4 leading-relaxed rounded-2xl bg-white/60 dark:bg-black/40 backdrop-blur-sm py-4 shadow-sm">
             Discover, attend, and participate in outcome-based hackathons, workshops, summits, and live expert sessions. InnoTech-Hub is building a student-first innovation ecosystem powered by events, AI tools, and scalable SaaS.
           </p>
         </div>
-
-      {/* Theme Toggle Navbar (Top Right) */}
-      <nav className="absolute top-4 right-4 flex gap-4">
-        <button 
-          onClick={toggleDarkMode}
-          className="p-3 bg-white/80 dark:bg-black/50 border-2 border-cozy-dark/10 dark:border-cozy-light/10 rounded-full hover:scale-110 active:scale-90 transition-transform drop-shadow-flat"
-        >
-          {isDarkMode ? <Sun className="text-cozy-light w-6 h-6" /> : <Moon className="text-cozy-dark w-6 h-6" />}
-        </button>
-      </nav>
 
         {/* Desktop Icons Container */}
         <div className="z-10 flex flex-wrap justify-center max-w-[40rem] mt-12 mb-10">
@@ -267,65 +257,6 @@ export default function Home() {
       <section id="contact" className="w-full">
         <ContactSection />
       </section>
-
-      {/* Footer Section */}
-      <PixelFooter />
-
-      {/* Modals */}
-      <CozyModal 
-        title="event_discovery.exe" 
-        isOpen={openModals.includes('events')} 
-        onClose={() => closeModal('events')}
-      >
-        <EventDiscovery />
-      </CozyModal>
-
-      <CozyModal 
-        title="student_dashboard.exe" 
-        isOpen={openModals.includes('dashboard')} 
-        onClose={() => closeModal('dashboard')}
-      >
-        <StudentDashboard />
-      </CozyModal>
-
-      <CozyModal 
-        title="about.txt" 
-        isOpen={openModals.includes('about')} 
-        onClose={() => closeModal('about')}
-      >
-        <div className="font-mono space-y-4">
-          <p>hi! we noticed many events were branding-focused and theoretical.</p>
-          <p>so we built a student-first ecosystem where every event becomes a learning journey.</p>
-          <ul className="list-disc pl-5 space-y-2 text-cozy-primary font-bold">
-            <li>hackathons</li>
-            <li>workshops</li>
-            <li>live sessions</li>
-          </ul>
-        </div>
-      </CozyModal>
-
-      <CozyModal 
-        title="discord.exe" 
-        isOpen={openModals.includes('community')} 
-        onClose={() => closeModal('community')}
-      >
-        <JoinCommunity />
-      </CozyModal>
-
-      <CozyModal 
-        title="saas_suite.exe" 
-        isOpen={openModals.includes('saas')} 
-        onClose={() => closeModal('saas')}
-      >
-        <SaaSProducts />
-      </CozyModal>
-
-      <JoinUsModal 
-        isOpen={openModals.includes('join')} 
-        onClose={() => closeModal('join')} 
-      />
-
-      <Mascot />
     </div>
   )
 }

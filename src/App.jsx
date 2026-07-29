@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import SiteLayout from './components/SiteLayout'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import { useAppStore } from './store/useAppStore'
@@ -17,16 +18,16 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="w-full min-h-screen">
-        <Routes>
+      <Routes>
+        <Route element={<SiteLayout />}>
           <Route path="/" element={
             <div className="animate-fade-in">
               <Home />
             </div>
           } />
           <Route path="/login" element={<Login />} />
-        </Routes>
-      </div>
+        </Route>
+      </Routes>
     </BrowserRouter>
   )
 }
