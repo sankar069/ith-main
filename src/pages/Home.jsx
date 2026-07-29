@@ -1,6 +1,7 @@
 import React from 'react'
 import { Calendar, Users, Cpu, Handshake, Rocket, Moon, Sun } from 'lucide-react'
 import ScrollReveal from '../components/ScrollReveal'
+import NavigationBar from '../components/NavigationBar'
 import { useAppStore } from '../store/useAppStore'
 import DesktopIcon from '../components/DesktopIcon'
 import CozyModal from '../components/CozyModal'
@@ -26,6 +27,7 @@ import TeamSection from '../components/TeamSection'
 import MediaOutreachSection from '../components/MediaOutreachSection'
 import VisionBannerSection from '../components/VisionBannerSection'
 import PartnersSponsorsSection from '../components/PartnersSponsorsSection'
+import ContactSection from '../components/ContactSection'
 import PixelFooter from '../components/PixelFooter'
 import CircularGallery from '../components/CircularGallery'
 
@@ -34,9 +36,10 @@ export default function Home() {
 
   return (
     <div className="w-full flex flex-col relative overflow-x-hidden min-h-screen">
+      <NavigationBar />
       
       {/* Slide 1: Hero Section */}
-      <section className="w-full flex flex-col items-center justify-start relative pt-[15vh] pb-12 overflow-hidden">
+      <section id="home" className="w-full flex flex-col items-center justify-start relative pt-[15vh] pb-12 overflow-hidden">
         
         {/* Background Video with Smooth Edge Fade */}
         <div className="absolute inset-0 w-full h-full -z-20">
@@ -117,7 +120,7 @@ export default function Home() {
 
       {/* Slide 3: About Section */}
       <ScrollReveal>
-      <section className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
+      <section id="about" className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
         <AboutSection />
       </section>
       </ScrollReveal>
@@ -131,7 +134,7 @@ export default function Home() {
 
       {/* Slide 5: Official Event Platform */}
       <ScrollReveal>
-      <section className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
+      <section id="events" className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
         <OfficialEventPlatformSection />
       </section>
       </ScrollReveal>
@@ -152,7 +155,7 @@ export default function Home() {
 
       {/* Slide 8: AI Suite Section */}
       <ScrollReveal>
-      <section className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
+      <section id="ai-suite" className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
         <AISuiteSection />
       </section>
       </ScrollReveal>
@@ -166,7 +169,7 @@ export default function Home() {
 
       {/* Slide 10: SaaS Products Section */}
       <ScrollReveal>
-      <section className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
+      <section id="saas" className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
         <ProductsSaaSSection />
       </section>
       </ScrollReveal>
@@ -179,7 +182,7 @@ export default function Home() {
       </ScrollReveal>
 
       {/* Slide 12: Roadmap Section */}
-      <section className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
+      <section id="roadmap" className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
         <RoadmapSection />
       </section>
 
@@ -199,14 +202,14 @@ export default function Home() {
 
       {/* Slide 14.5: Partners & Sponsors Section */}
       <ScrollReveal>
-      <section className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
+      <section id="partners" className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
         <PartnersSponsorsSection />
       </section>
       </ScrollReveal>
 
       {/* Slide 15: Team Section */}
       <ScrollReveal>
-      <section className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
+      <section id="team" className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
         <TeamSection />
       </section>
       </ScrollReveal>
@@ -255,6 +258,11 @@ export default function Home() {
       {/* Slide 17: Vision Banner */}
       <section className="w-full">
         <VisionBannerSection />
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="w-full">
+        <ContactSection />
       </section>
 
       {/* Footer Section */}
