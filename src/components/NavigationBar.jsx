@@ -4,6 +4,7 @@ import { useAppStore } from '../store/useAppStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function NavigationBar() {
+  const { openModal } = useAppStore();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -96,6 +97,12 @@ export default function NavigationBar() {
                 {item.name}
               </button>
             ))}
+            <button
+              onClick={() => openModal('join')}
+              className="ml-2 px-5 py-1.5 rounded-full text-sm font-sans font-semibold bg-[#c84c30] hover:bg-[#b04027] text-white transition-colors shadow-sm"
+            >
+              Join Us
+            </button>
           </nav>
 
           {/* Mobile Menu Toggle */}
@@ -132,6 +139,12 @@ export default function NavigationBar() {
                   {item.name}
                 </button>
               ))}
+              <button
+                onClick={() => { openModal('join'); setMobileMenuOpen(false); }}
+                className="px-4 py-3 rounded-xl text-left text-sm font-semibold bg-[#c84c30] text-white"
+              >
+                Join Us
+              </button>
             </div>
           </motion.div>
         )}

@@ -1,4 +1,6 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAppStore } from '../store/useAppStore'
 import ScrollRevealText from '../components/ScrollRevealText'
 import { 
   LogIn, 
@@ -15,6 +17,8 @@ import {
 } from 'lucide-react'
 
 export default function OfficialEventPlatformSection() {
+  const navigate = useNavigate()
+  const { openModal } = useAppStore()
   const eventTypes = [
     {
       icon: Trophy,
@@ -85,15 +89,27 @@ export default function OfficialEventPlatformSection() {
 
       {/* Buttons */}
       <div className="flex flex-wrap justify-center gap-4 mb-16">
-        <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#c84c30] hover:bg-[#b04027] text-white font-sans text-sm font-semibold transition-colors shadow-sm">
+        <button
+          type="button"
+          onClick={() => navigate('/login')}
+          className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#c84c30] hover:bg-[#b04027] text-white font-sans text-sm font-semibold transition-colors shadow-sm"
+        >
           <LogIn className="w-4 h-4" />
           Login to Event Platform
         </button>
-        <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-black/40 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500 text-cozy-dark dark:text-cozy-light font-sans text-sm font-semibold transition-all shadow-sm hover:shadow">
+        <button
+          type="button"
+          onClick={() => openModal('join')}
+          className="flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-black/40 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500 text-cozy-dark dark:text-cozy-light font-sans text-sm font-semibold transition-all shadow-sm hover:shadow"
+        >
           <UserPlus className="w-4 h-4 text-gray-500" />
-          Create Student Account
+          Join Us
         </button>
-        <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-black/40 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500 text-cozy-dark dark:text-cozy-light font-sans text-sm font-semibold transition-all shadow-sm hover:shadow">
+        <button
+          type="button"
+          onClick={() => openModal('events')}
+          className="flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-black/40 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500 text-cozy-dark dark:text-cozy-light font-sans text-sm font-semibold transition-all shadow-sm hover:shadow"
+        >
           <Search className="w-4 h-4 text-gray-500" />
           Explore Events
         </button>

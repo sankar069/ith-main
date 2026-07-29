@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Calendar, Users, Cpu, Handshake, Rocket, Moon, Sun } from 'lucide-react'
 import ScrollReveal from '../components/ScrollReveal'
 import NavigationBar from '../components/NavigationBar'
@@ -30,8 +31,10 @@ import PartnersSponsorsSection from '../components/PartnersSponsorsSection'
 import ContactSection from '../components/ContactSection'
 import PixelFooter from '../components/PixelFooter'
 import CircularGallery from '../components/CircularGallery'
+import JoinUsModal from '../components/JoinUsModal'
 
 export default function Home() {
+  const navigate = useNavigate()
   const { isDarkMode, toggleDarkMode, openModals, openModal, closeModal } = useAppStore()
 
   return (
@@ -101,12 +104,12 @@ export default function Home() {
           <DesktopIcon 
             icon={Handshake} 
             label="Partner With Us" 
-            onClick={() => document.getElementById('contact-section')?.scrollIntoView({behavior: 'smooth'})} 
+            onClick={() => document.getElementById('contact')?.scrollIntoView({behavior: 'smooth'})} 
           />
           <DesktopIcon 
             icon={Rocket} 
             label="Enter Event Platform" 
-            onClick={() => window.location.href = '/login'} 
+            onClick={() => navigate('/login')} 
           />
         </div>
       </section>
@@ -316,6 +319,11 @@ export default function Home() {
       >
         <SaaSProducts />
       </CozyModal>
+
+      <JoinUsModal 
+        isOpen={openModals.includes('join')} 
+        onClose={() => closeModal('join')} 
+      />
 
       <Mascot />
     </div>

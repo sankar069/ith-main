@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
+import Login from './pages/Login'
 import { useAppStore } from './store/useAppStore'
 
 function App() {
@@ -14,11 +16,18 @@ function App() {
   }, [isDarkMode])
 
   return (
-    <div className="w-full min-h-screen">
-      <div className="animate-fade-in">
-        <Home />
+    <BrowserRouter>
+      <div className="w-full min-h-screen">
+        <Routes>
+          <Route path="/" element={
+            <div className="animate-fade-in">
+              <Home />
+            </div>
+          } />
+          <Route path="/login" element={<Login />} />
+        </Routes>
       </div>
-    </div>
+    </BrowserRouter>
   )
 }
 
