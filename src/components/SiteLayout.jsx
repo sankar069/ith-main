@@ -17,10 +17,10 @@ export default function SiteLayout() {
   const { openModals, closeModal } = useAppStore()
 
   return (
-    <div className="w-full min-h-screen flex flex-col bg-cozy-light dark:bg-cozy-dark">
+    <div className="w-full min-h-screen flex flex-col">
       <NavigationBar />
 
-      <main className="flex-1 w-full">
+      <main className="flex-1 w-full relative">
         <Outlet />
       </main>
 

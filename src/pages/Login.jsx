@@ -59,18 +59,18 @@ export default function Login() {
   }
 
   return (
-    <div className="w-full relative pt-20 pb-12 md:pt-24 md:pb-16 min-h-[calc(100vh-4rem)]">
-      {/* Landscape background — sub-page only, no hero */}
-      <div className="absolute inset-0 -z-10">
+    <div className="relative isolate w-full pt-20 pb-12 md:pt-24 md:pb-16 min-h-[calc(100vh-4rem)]">
+      {/* Landscape background */}
+      <div className="absolute inset-0 z-0">
         <img
           src="/login-landscape.png"
           alt=""
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-white/30 dark:bg-black/40" />
+        <div className="absolute inset-0 bg-white/15 dark:bg-black/25" />
       </div>
 
-      <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-4 sm:px-6">
         <div className="w-full min-h-[520px] bg-white/95 dark:bg-cozy-dark/95 backdrop-blur-md rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col">
           <div className="flex flex-1 flex-col lg:flex-row min-h-0">
             {/* Form / pricing */}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Calendar, Users, Cpu, Handshake, Rocket } from 'lucide-react'
 import ScrollReveal from '../components/ScrollReveal'
@@ -28,6 +28,7 @@ export default function Home() {
   const navigate = useNavigate()
   const location = useLocation()
   const { isDarkMode, openModal } = useAppStore()
+  const heroVideoRef = useRef(null)
 
   useEffect(() => {
     const hash = location.hash.replace('#', '')
@@ -38,19 +39,27 @@ export default function Home() {
     return () => clearTimeout(timer)
   }, [location.hash])
 
+  useEffect(() => {
+    const video = heroVideoRef.current
+    if (!video) return
+    video.play().catch(() => {})
+  }, [])
+
   return (
     <div className="w-full flex flex-col relative overflow-x-hidden">
       
       {/* Hero Section — landing page only */}
-      <section id="home" className="w-full flex flex-col items-center justify-start relative pt-28 md:pt-32 pb-12 overflow-hidden min-h-[85vh]">
+      <section id="home" className="relative isolate w-full flex flex-col items-center justify-start pt-28 md:pt-32 pb-12 overflow-hidden min-h-[85vh]">
         
         {/* Background Video with Smooth Edge Fade */}
-        <div className="absolute inset-0 w-full h-full -z-20">
+        <div className="absolute inset-0 z-0 pointer-events-none">
           <video
+            ref={heroVideoRef}
             autoPlay
             loop
             muted
             playsInline
+            preload="auto"
             className="w-full h-full object-cover"
             style={{ 
               maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)', 
@@ -62,7 +71,7 @@ export default function Home() {
         </div>
 
         {/* Background Graphic / Greeting */}
-        <div className="flex flex-col items-center animate-bobbing px-4 relative z-10 max-w-3xl">
+        <div className="relative z-10 flex flex-col items-center animate-bobbing px-4 max-w-3xl">
           <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/40 bg-white/70 dark:bg-black/30 backdrop-blur-sm text-xs font-semibold tracking-wider text-cozy-dark/90 dark:text-cozy-light/90 shadow-sm">
             ✨ GLOBAL TECH EVENTS & SAAS INNOVATION PLATFORM
           </div>
@@ -75,7 +84,7 @@ export default function Home() {
         </div>
 
         {/* Desktop Icons Container */}
-        <div className="z-10 flex flex-wrap justify-center max-w-[40rem] mt-12 mb-10">
+        <div className="relative z-10 flex flex-wrap justify-center max-w-[40rem] mt-12 mb-10">
           <DesktopIcon 
             icon={Calendar} 
             label="Explore Events" 
@@ -104,6 +113,7 @@ export default function Home() {
         </div>
       </section>
 
+      <div className="bg-cozy-light dark:bg-cozy-dark">
       {/* Slide 2: Traction Telemetry */}
       <ScrollReveal>
       <section className="w-full flex flex-col items-center justify-start relative px-4 pb-12">
@@ -257,6 +267,7 @@ export default function Home() {
       <section id="contact" className="w-full">
         <ContactSection />
       </section>
+      </div>
     </div>
   )
 }
