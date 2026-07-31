@@ -10,7 +10,7 @@ function FormField({ label, type, value, onChange, icon: Icon, rightSlot }) {
   return (
     <div
       className={`relative rounded-xl bg-gray-50 dark:bg-black/20 border transition-all duration-200 ${
-        focused ? 'border-[#c84c30] shadow-[0_0_0_3px_rgba(200,76,48,0.1)]' : 'border-gray-200 dark:border-white/10'
+        focused ? 'border-blue-500 shadow-[0_0_0_3px_rgba(59,130,246,0.1)]' : 'border-gray-200 dark:border-white/10'
       }`}
     >
       <label className="block px-4 pt-2.5 text-[11px] font-sans text-gray-400 uppercase tracking-wider">
@@ -60,14 +60,17 @@ export default function Login() {
 
   return (
     <div className="relative isolate w-full pt-20 pb-12 md:pt-24 md:pb-16 min-h-[calc(100vh-4rem)]">
-      {/* Landscape background */}
-      <div className="absolute inset-0 z-0">
+      {/* Landscape background with fade overlay */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <img
-          src="/login-landscape.png"
+          src="/1000108003_landscape_fixed.mp4"
           alt=""
           className="w-full h-full object-cover"
+          onError={(e) => {
+            e.target.src = '/login-bg.png'
+          }}
         />
-        <div className="absolute inset-0 bg-white/15 dark:bg-black/25" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-transparent to-white/60 dark:to-black/60" />
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-5xl px-4 sm:px-6">
@@ -94,9 +97,9 @@ export default function Login() {
                   </p>
                   <h1 className="text-2xl md:text-3xl font-display font-bold text-cozy-dark dark:text-cozy-light mb-1">
                     {view === 'signup' ? (
-                      <>Create new account<span className="text-[#c84c30]">.</span></>
+                      <>Create new account<span className="text-blue-500">.</span></>
                     ) : (
-                      <>Sign in with email<span className="text-[#c84c30]">.</span></>
+                      <>Sign in with email<span className="text-blue-500">.</span></>
                     )}
                   </h1>
                   <p className="text-sm text-gray-500 font-sans mb-8">
@@ -152,7 +155,7 @@ export default function Login() {
 
                     {view === 'signin' && (
                       <div className="flex justify-end">
-                        <button type="button" className="text-xs font-sans font-semibold text-gray-500 hover:text-[#c84c30] transition-colors">
+                        <button type="button" className="text-xs font-sans font-semibold text-gray-500 hover:text-blue-500 transition-colors">
                           Forgot password?
                         </button>
                       </div>
@@ -170,7 +173,7 @@ export default function Login() {
                       )}
                       <button
                         type="submit"
-                        className={`py-3 rounded-full bg-[#c84c30] hover:bg-[#b04027] text-white text-sm font-sans font-semibold transition-all active:scale-[0.98] ${
+                        className={`py-3 rounded-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-sans font-semibold transition-all active:scale-[0.98] ${
                           view === 'signup' ? 'flex-1' : 'w-full'
                         }`}
                       >
@@ -205,18 +208,18 @@ export default function Login() {
                     {view === 'signup' ? (
                       <>
                         Already a member?{' '}
-                        <button type="button" onClick={() => setView('signin')} className="text-[#c84c30] font-semibold hover:underline">
+                        <button type="button" onClick={() => setView('signin')} className="text-blue-500 font-semibold hover:underline">
                           Log In
                         </button>
                       </>
                     ) : (
                       <>
                         New here?{' '}
-                        <button type="button" onClick={() => setView('signup')} className="text-[#c84c30] font-semibold hover:underline">
+                        <button type="button" onClick={() => setView('signup')} className="text-blue-500 font-semibold hover:underline">
                           Create account
                         </button>
                         {' · '}
-                        <button type="button" onClick={() => setView('pricing')} className="text-[#c84c30] font-semibold hover:underline">
+                        <button type="button" onClick={() => setView('pricing')} className="text-blue-500 font-semibold hover:underline">
                           View plans
                         </button>
                       </>
