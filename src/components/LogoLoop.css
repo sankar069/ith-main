@@ -16,10 +16,8 @@
   padding-bottom: calc(var(--logoloop-logoHeight) * 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  .logoloop {
-    --logoloop-fadeColorAuto: #0b0b0b;
-  }
+.dark .logoloop {
+  --logoloop-fadeColorAuto: #0b0b0b;
 }
 
 .logoloop__track {
@@ -81,6 +79,36 @@
   -webkit-user-drag: none;
   pointer-events: none;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logoloop__card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  min-height: 100px;
+  min-width: 100px;
+}
+
+.dark .logoloop__card {
+  background: #1a1f26;
+  border-color: #404854;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.logoloop__card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #d1d5db;
+}
+
+.dark .logoloop__card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border-color: #565f73;
 }
 
 .logoloop--scale-hover .logoloop__item {

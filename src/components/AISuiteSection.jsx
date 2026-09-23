@@ -10,90 +10,77 @@ import {
   Compass 
 } from 'lucide-react';
 
+const aiTools = [
+  {
+    id: 'chat-assistant',
+    icon: Bot,
+    title: "AI Chat Assistant",
+    desc: "A personal mentor suggesting events, courses, projects, teammates, and career paths.",
+    isComingSoon: false,
+    features: ["Event Suggestions", "Course Recommendations", "Project Ideas", "Teammate Matching"],
+    color: "#06b6d4"
+  },
+  {
+    id: 'event-recommendation',
+    icon: Compass,
+    title: "AI Event Recommendation",
+    desc: "Recommends events based on skills, interests, year, and career goals.",
+    isComingSoon: true,
+    features: ["Skill Matching", "Interest Filtering", "Career Alignment", "Year-based Curation"],
+    color: "#3b82f6"
+  },
+  {
+    id: 'idea-generator',
+    icon: Lightbulb,
+    title: "AI Idea Generator",
+    desc: "Hackathon ideas tuned to theme, team skills, time, and tech stack.",
+    isComingSoon: true,
+    features: ["Theme Tuning", "Tech Stack Integration", "Time-frame Optimization", "Team Skill Alignment"],
+    color: "#f59e0b"
+  },
+  {
+    id: 'idea-analyzer',
+    icon: ShieldCheck,
+    title: "AI Idea Analyzer",
+    desc: "Checks uniqueness, feasibility, business value, and presentation strength.",
+    isComingSoon: true,
+    features: ["Uniqueness Check", "Feasibility Audit", "Business Value Rating", "Presentation Feedback"],
+    color: "#8b5cf6"
+  },
+  {
+    id: 'team-matching',
+    icon: Users,
+    title: "AI Team Matching",
+    desc: "Matches by skills, interests, availability, domain, and project goals.",
+    isComingSoon: true,
+    features: ["Domain Alignment", "Skill Complementarity", "Availability Match", "Goal Synchronization"],
+    color: "#ec4899"
+  },
+  {
+    id: 'resume-analyzer',
+    icon: FileText,
+    title: "Resume Analyzer",
+    desc: "Resume score, missing skills, ATS suggestions, and event-based bullets.",
+    isComingSoon: true,
+    features: ["Resume Scoring", "Skill Gap Detection", "ATS Optimization", "Event-based Bullets"],
+    color: "#ef4444"
+  }
+];
+
 export default function AISuiteSection() {
   const [activeTool, setActiveTool] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
-
-  const aiTools = [
-    {
-      id: 'chat-assistant',
-      icon: Bot,
-      title: "AI Chat Assistant",
-      desc: "A personal mentor suggesting events, courses, projects, teammates, and career paths.",
-      isComingSoon: false,
-      features: ["Event Suggestions", "Course Recommendations", "Project Ideas", "Teammate Matching"],
-      color: "#06b6d4"
-    },
-    {
-      id: 'event-recommendation',
-      icon: Compass,
-      title: "AI Event Recommendation",
-      desc: "Recommends events based on skills, interests, year, and career goals.",
-      isComingSoon: true,
-      features: ["Skill Matching", "Interest Filtering", "Career Alignment", "Year-based Curation"],
-      color: "#3b82f6"
-    },
-    {
-      id: 'idea-generator',
-      icon: Lightbulb,
-      title: "AI Idea Generator",
-      desc: "Hackathon ideas tuned to theme, team skills, time, and tech stack.",
-      isComingSoon: true,
-      features: ["Theme Tuning", "Tech Stack Integration", "Time-frame Optimization", "Team Skill Alignment"],
-      color: "#f59e0b"
-    },
-    {
-      id: 'idea-analyzer',
-      icon: ShieldCheck,
-      title: "AI Idea Analyzer",
-      desc: "Checks uniqueness, feasibility, business value, and presentation strength.",
-      isComingSoon: true,
-      features: ["Uniqueness Check", "Feasibility Audit", "Business Value Rating", "Presentation Feedback"],
-      color: "#8b5cf6"
-    },
-    {
-      id: 'team-matching',
-      icon: Users,
-      title: "AI Team Matching",
-      desc: "Matches by skills, interests, availability, domain, and project goals.",
-      isComingSoon: true,
-      features: ["Domain Alignment", "Skill Complementarity", "Availability Match", "Goal Synchronization"],
-      color: "#ec4899"
-    },
-    {
-      id: 'resume-analyzer',
-      icon: FileText,
-      title: "Resume Analyzer",
-      desc: "Resume score, missing skills, ATS suggestions, and event-based bullets.",
-      isComingSoon: true,
-      features: ["Resume Scoring", "Skill Gap Detection", "ATS Optimization", "Event-based Bullets"],
-      color: "#ef4444"
-    },
-    {
-      id: 'career-guidance',
-      icon: Sparkles,
-      title: "AI Career Guidance",
-      desc: "Personalized career roadmaps, skill gap analysis, and next-step recommendations for your tech journey.",
-      isComingSoon: true,
-      features: ["Personalized Roadmaps", "Skill Gap Analysis", "Next-step Guidance", "Tech Journey Tracking"],
-      color: "#10b981"
-    }
-  ];
 
   // Set default active tool if none is hovered
   useEffect(() => {
     if (!isHovering && !activeTool) {
       setActiveTool(aiTools[0]);
     }
-  }, [isHovering, activeTool, aiTools]);
+  }, [isHovering, activeTool]);
 
   return (
     <div className="w-full min-h-screen bg-[#faf7f2] dark:bg-[#0a0a0a] flex flex-col items-center pt-24 pb-20 px-4 relative overflow-hidden transition-colors duration-500">
       
-      {/* Background Ambient Glows */}
-      <div className="absolute top-[20%] left-[20%] w-[500px] h-[500px] bg-[#c84c30]/10 dark:bg-[#c84c30]/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen pointer-events-none transition-all duration-1000"></div>
-      <div className="absolute bottom-[20%] right-[20%] w-[400px] h-[400px] bg-blue-500/10 dark:bg-blue-600/20 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen pointer-events-none transition-all duration-1000"></div>
-
       {/* Pill Badge */}
       <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cozy-dark/10 dark:border-white/10 bg-white/80 dark:bg-white/5 text-[10px] md:text-xs font-semibold uppercase tracking-widest text-[#c84c30] shadow-sm mb-4 font-mono z-10 backdrop-blur-md">
         <span className="w-1.5 h-1.5 rounded-full bg-[#c84c30]"></span> THE FUTURE IS HERE

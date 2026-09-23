@@ -89,9 +89,9 @@ export default function PixelFooter() {
               <h4 className="font-pixel text-[10px] text-gray-400 uppercase tracking-widest mb-2">Connect</h4>
               <a href="#" className="font-mono text-xs text-gray-300 hover:text-white transition-colors">Partners</a>
               <a href="#" className="font-mono text-xs text-gray-300 hover:text-white transition-colors">Contact</a>
-              <a href="#" className="font-mono text-xs text-gray-300 hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="font-mono text-xs text-gray-300 hover:text-white transition-colors">Terms</a>
-              <a href="#" className="font-mono text-xs text-gray-300 hover:text-white transition-colors">Rules</a>
+              <a href="/privacy" className="font-mono text-xs text-gray-300 hover:text-white transition-colors">Privacy Policy</a>
+              <a href="/terms" className="font-mono text-xs text-gray-300 hover:text-white transition-colors">Terms</a>
+              <a href="/accessibility" className="font-mono text-xs text-gray-300 hover:text-white transition-colors">Accessibility</a>
             </div>
           </div>
 

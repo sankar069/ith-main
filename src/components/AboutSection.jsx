@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Play, ArrowRight, ExternalLink } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Play, ArrowRight } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import ScrollRevealText from './ScrollRevealText';
 
 export default function AboutSection() {
+  const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
@@ -40,7 +42,7 @@ export default function AboutSection() {
           {/* CTA Button */}
           <ScrollReveal delay={300}>
             <button 
-              onClick={() => document.getElementById('ai-suite')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => navigate('/ai-suite')}
               className="group flex items-center gap-3 px-8 py-4 rounded-xl bg-cozy-dark dark:bg-white text-white dark:text-cozy-dark font-sans text-sm font-bold transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-1"
             >
               Explore Our Ecosystem

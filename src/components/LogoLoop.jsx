@@ -253,6 +253,11 @@ export const LogoLoop = memo(
           />
         );
         const itemAriaLabel = isNodeItem ? (item.ariaLabel ?? item.title) : (item.alt ?? item.title);
+        const cardContent = (
+          <div className="logoloop__card">
+            {content}
+          </div>
+        );
         const itemContent = item.href ? (
           <a
             className="logoloop__link"
@@ -261,10 +266,10 @@ export const LogoLoop = memo(
             target="_blank"
             rel="noreferrer noopener"
           >
-            {content}
+            {cardContent}
           </a>
         ) : (
-          content
+          cardContent
         );
         return (
           <li className="logoloop__item" key={key} role="listitem">

@@ -1,20 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import NavigationBar from './NavigationBar'
-import PixelFooter from './PixelFooter'
-import CozyModal from './CozyModal'
+import MinimalFooter from './MinimalFooter'
+import AppleWindow from './AppleWindow'
 import JoinUsModal from './JoinUsModal'
 import Mascot from './Mascot'
 import { useAppStore } from '../store/useAppStore'
-import EventDiscovery from '../pages/EventDiscovery'
-import StudentDashboard from '../pages/StudentDashboard'
 import JoinCommunity from '../pages/JoinCommunity'
-import SaaSProducts from '../pages/SaaSProducts'
 
 export default function SiteLayout() {
   const location = useLocation()
   const isHome = location.pathname === '/'
   const { openModals, closeModal } = useAppStore()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location.pathname])
 
   return (
     <div className="w-full min-h-screen flex flex-col">
@@ -24,30 +25,14 @@ export default function SiteLayout() {
         <Outlet />
       </main>
 
-      <PixelFooter />
+      <MinimalFooter />
 
-      <CozyModal
-        title="event_discovery.exe"
-        isOpen={openModals.includes('events')}
-        onClose={() => closeModal('events')}
-      >
-        <EventDiscovery />
-      </CozyModal>
-
-      <CozyModal
-        title="student_dashboard.exe"
-        isOpen={openModals.includes('dashboard')}
-        onClose={() => closeModal('dashboard')}
-      >
-        <StudentDashboard />
-      </CozyModal>
-
-      <CozyModal
+      <AppleWindow
         title="about.txt"
         isOpen={openModals.includes('about')}
         onClose={() => closeModal('about')}
       >
-        <div className="font-mono space-y-4">
+        <div className="font-sans space-y-4 text-cozy-dark dark:text-cozy-light">
           <p>hi! we noticed many events were branding-focused and theoretical.</p>
           <p>so we built a student-first ecosystem where every event becomes a learning journey.</p>
           <ul className="list-disc pl-5 space-y-2 text-cozy-primary font-bold">
@@ -56,23 +41,15 @@ export default function SiteLayout() {
             <li>live sessions</li>
           </ul>
         </div>
-      </CozyModal>
+      </AppleWindow>
 
-      <CozyModal
+      <AppleWindow
         title="discord.exe"
         isOpen={openModals.includes('community')}
         onClose={() => closeModal('community')}
       >
         <JoinCommunity />
-      </CozyModal>
-
-      <CozyModal
-        title="saas_suite.exe"
-        isOpen={openModals.includes('saas')}
-        onClose={() => closeModal('saas')}
-      >
-        <SaaSProducts />
-      </CozyModal>
+      </AppleWindow>
 
       <JoinUsModal
         isOpen={openModals.includes('join')}

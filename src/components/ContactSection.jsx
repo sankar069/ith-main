@@ -1,14 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
+import { useAppStore } from '../store/useAppStore';
+
+const QUERY_TYPES = [
+  'Sponsorship',
+  'Partnership',
+  'Investment',
+  'Student Inquiry',
+  'Media / Press',
+  'General Inquiry',
+  'Other',
+];
 
 export default function ContactSection() {
+  const { contactIntent, setContactIntent } = useAppStore();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    company: ''
+    company: '',
+    queryType: ''
   });
+
+  // Pick up the intent set by CTAs like "Become a Partner" / "Sponsor an
+  // Event", then clear it so it doesn't leak into a later unrelated visit.
+  useEffect(() => {
+    if (contactIntent) {
+      setFormData(prev => ({ ...prev, queryType: contactIntent }));
+      setContactIntent('');
+    }
+  }, [contactIntent, setContactIntent]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -105,15 +127,35 @@ export default function ContactSection() {
               <label htmlFor="company" className="text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider font-sans">
                 Organization <span className="text-gray-400 font-normal">(Optional)</span>
               </label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 id="company"
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
-                placeholder="Acme Corp / University" 
+                placeholder="Acme Corp / University"
                 className="w-full bg-white dark:bg-black/50 border border-gray-200 dark:border-gray-700 rounded-xl p-3.5 text-sm font-sans placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#c84c30]/20 focus:border-[#c84c30] transition-all"
               />
+            </div>
+
+            {/* Query Type */}
+            <div className="flex flex-col gap-2 md:col-span-2">
+              <label htmlFor="queryType" className="text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider font-sans">
+                What's Your Query About?
+              </label>
+              <select
+                id="queryType"
+                name="queryType"
+                required
+                value={formData.queryType}
+                onChange={handleChange}
+                className="w-full bg-white dark:bg-black/50 border border-gray-200 dark:border-gray-700 rounded-xl p-3.5 text-sm font-sans text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-[#c84c30]/20 focus:border-[#c84c30] transition-all"
+              >
+                <option value="" disabled>Select a topic</option>
+                {QUERY_TYPES.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
             </div>
           </div>
 

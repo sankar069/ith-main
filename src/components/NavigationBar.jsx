@@ -16,6 +16,8 @@ const NAV_ITEMS = [
   { name: 'Contact', id: 'contact' },
 ]
 
+const sectionPath = (id) => (id === 'home' ? '/' : `/${id}`)
+
 export default function NavigationBar() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -23,7 +25,6 @@ export default function NavigationBar() {
   const { openModal, isDarkMode, toggleDarkMode } = useAppStore()
 
   const [isScrolled, setIsScrolled] = useState(false)
-  const [activeSection, setActiveSection] = useState('home')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const isSolid = isSubPage || isScrolled
@@ -36,48 +37,15 @@ export default function NavigationBar() {
   }, [])
 
   useEffect(() => {
-    if (isSubPage) return
-
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 120
-      for (let i = NAV_ITEMS.length - 1; i >= 0; i--) {
-        const section = document.getElementById(NAV_ITEMS[i].id)
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(NAV_ITEMS[i].id)
-          break
-        }
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isSubPage, location.pathname])
-
-  useEffect(() => {
     setMobileMenuOpen(false)
   }, [location.pathname])
 
   const goToSection = (id) => {
     setMobileMenuOpen(false)
-    if (isSubPage) {
-      navigate(`/#${id}`)
-      return
-    }
-    const element = document.getElementById(id)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-    }
+    navigate(sectionPath(id))
   }
 
-  const goHome = () => {
-    setMobileMenuOpen(false)
-    if (isSubPage) {
-      navigate('/')
-      return
-    }
-    goToSection('home')
-  }
+  const goHome = () => goToSection('home')
 
   return (
     <>
@@ -113,12 +81,12 @@ export default function NavigationBar() {
                     type="button"
                     onClick={() => goToSection(item.id)}
                     className={`relative shrink-0 px-3 py-1.5 rounded-full text-[13px] font-sans font-medium whitespace-nowrap transition-colors ${
-                      !isSubPage && activeSection === item.id
+                      location.pathname === sectionPath(item.id)
                         ? 'text-[#c84c30] dark:text-white'
                         : 'text-gray-600 hover:text-cozy-dark dark:text-gray-300 dark:hover:text-white'
                     }`}
                   >
-                    {!isSubPage && activeSection === item.id && (
+                    {location.pathname === sectionPath(item.id) && (
                       <motion.div
                         layoutId="activeNavIndicator"
                         className="absolute inset-0 bg-gray-100 dark:bg-white/10 rounded-full -z-10"
@@ -151,7 +119,7 @@ export default function NavigationBar() {
                 onClick={() => openModal('join')}
                 className="hidden sm:inline-flex px-4 py-2 rounded-full text-sm font-sans font-semibold bg-[#c84c30] hover:bg-[#b04027] text-white transition-colors shadow-sm"
               >
-                Join Us
+                Sign Up
               </button>
 
               <button
@@ -192,7 +160,7 @@ export default function NavigationBar() {
                     type="button"
                     onClick={() => goToSection(item.id)}
                     className={`px-4 py-2.5 rounded-xl text-left text-sm font-medium transition-colors ${
-                      !isSubPage && activeSection === item.id
+                      location.pathname === sectionPath(item.id)
                         ? 'bg-[#fdf0ed] text-[#c84c30] dark:bg-white/10 dark:text-white'
                         : 'text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-white/5'
                     }`}
@@ -205,7 +173,7 @@ export default function NavigationBar() {
                   onClick={() => { openModal('join'); setMobileMenuOpen(false) }}
                   className="mt-1 px-4 py-2.5 rounded-xl text-sm font-semibold bg-[#c84c30] text-white sm:hidden"
                 >
-                  Join Us
+                  Sign Up
                 </button>
                 {isSubPage && (
                   <Link

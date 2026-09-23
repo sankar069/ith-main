@@ -107,7 +107,7 @@ export default function OfficialEventPlatformSection() {
         </button>
         <button
           type="button"
-          onClick={() => openModal('events')}
+          onClick={() => navigate('/login')}
           className="flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-black/40 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500 text-cozy-dark dark:text-cozy-light font-sans text-sm font-semibold transition-all shadow-sm hover:shadow"
         >
           <Search className="w-4 h-4 text-gray-500" />
@@ -120,8 +120,10 @@ export default function OfficialEventPlatformSection() {
         {eventTypes.map((item, index) => {
           const Icon = item.icon
           return (
-            <div key={index} className="bg-white dark:bg-black/40 border border-gray-100 dark:border-gray-800 rounded-2xl p-5 flex flex-col items-start hover:-translate-y-1 hover:shadow-md transition-all duration-300 group cursor-pointer shadow-sm">
-              <Icon className="w-5 h-5 text-[#c84c30] mb-4 group-hover:scale-110 transition-transform" />
+            <div key={index} className="bg-white dark:bg-black/40 border border-gray-100 dark:border-gray-800 rounded-2xl p-5 flex flex-col items-start hover:-translate-y-1.5 hover:shadow-lg transition-all duration-300 group cursor-pointer shadow-sm">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[#c84c30]/10 dark:bg-[#c84c30]/15 border border-[#c84c30]/10 mb-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-[#c84c30]/15">
+                <Icon className="w-6 h-6 text-[#c84c30]" strokeWidth={1.9} />
+              </div>
               <h4 className="text-sm font-bold text-cozy-dark dark:text-cozy-light font-sans mb-1">
                 {item.title}
               </h4>

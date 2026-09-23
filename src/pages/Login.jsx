@@ -1,237 +1,312 @@
 import React, { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { Mail, Lock, Eye, EyeOff, User, ArrowLeft } from 'lucide-react'
-import JoinUsPricing from '../components/JoinUsPricing'
-import LoginIllustration from '../components/LoginIllustration'
-
-function FormField({ label, type, value, onChange, icon: Icon, rightSlot }) {
-  const [focused, setFocused] = useState(false)
-
-  return (
-    <div
-      className={`relative rounded-xl bg-gray-50 dark:bg-black/20 border transition-all duration-200 ${
-        focused ? 'border-blue-500 shadow-[0_0_0_3px_rgba(59,130,246,0.1)]' : 'border-gray-200 dark:border-white/10'
-      }`}
-    >
-      <label className="block px-4 pt-2.5 text-[11px] font-sans text-gray-400 uppercase tracking-wider">
-        {label}
-      </label>
-      <div className="flex items-center px-4 pb-2.5 gap-2">
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          className="flex-1 bg-transparent text-cozy-dark dark:text-cozy-light text-sm font-sans outline-none placeholder:text-gray-400"
-          placeholder={label}
-        />
-        {Icon && <Icon className="w-4 h-4 text-gray-400 shrink-0" />}
-        {rightSlot}
-      </div>
-    </div>
-  )
-}
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Mail, Lock, Eye, EyeOff, Globe, Apple, AlertCircle } from 'lucide-react'
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient'
+import { useStudentStore } from '../store/useStudentStore'
+import { studentFetch } from '../lib/studentApi'
 
 export default function Login() {
+  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const initialView = searchParams.get('view') === 'pricing' ? 'pricing' : searchParams.get('mode') === 'signup' ? 'signup' : 'signin'
-
-  const [view, setView] = useState(initialView)
+  // Lets entry points elsewhere on the site (the "Join!" CTA, JoinUsModal's
+  // plan picker) deep-link straight into signup with the email pre-filled,
+  // instead of always landing on a blank sign-in form.
+  const [mode, setMode] = useState(searchParams.get('mode') === 'signup' ? 'signup' : 'signin')
   const [showPassword, setShowPassword] = useState(false)
   const [form, setForm] = useState({
+    email: searchParams.get('email') || '',
+    password: '',
     firstName: '',
     lastName: '',
-    email: '',
-    password: '',
+    rememberMe: false,
   })
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
-  const updateField = (field) => (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }))
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(`${view} submitted:`, form)
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target
+    setForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }))
   }
 
-  const handleSelectPlan = (planId) => {
-    setView('signup')
-    console.log('Selected plan:', planId)
+  const { login, setProfile } = useStudentStore()
+
+  const establishSession = async (session) => {
+    // Populate the token first so the profile fetch below can authenticate.
+    login(session.access_token, null)
+    try {
+      const data = await studentFetch('/api/student/profile')
+      setProfile(data.profile)
+    } catch {
+      // Profile row may not exist yet (e.g. trigger not deployed) — the
+      // session itself is still valid, dashboard tabs will show empty states.
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setSubmitError('')
+    if (!isSupabaseConfigured) {
+      setSubmitError('Sign-up/sign-in isn\'t configured yet — VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are missing. Set them in .env and restart the dev server.')
+      return
+    }
+    setSubmitting(true)
+    try {
+      if (mode === 'signup') {
+        const fullName = `${form.firstName} ${form.lastName}`.trim()
+        const { data, error } = await supabase.auth.signUp({
+          email: form.email,
+          password: form.password,
+          options: { data: { full_name: fullName } },
+        })
+        if (error) throw error
+        if (!data.session) {
+          setSubmitError('Account created! Check your email to confirm it, then sign in.')
+          setMode('signin')
+          return
+        }
+        await establishSession(data.session)
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: form.email,
+          password: form.password,
+        })
+        if (error) throw error
+        await establishSession(data.session)
+      }
+      navigate('/dashboard')
+    } catch (err) {
+      setSubmitError(err.message || 'Unable to sign in. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
-    <div className="relative isolate w-full pt-20 pb-12 md:pt-24 md:pb-16 min-h-[calc(100vh-4rem)]">
-      {/* Landscape background with fade overlay */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <img
-          src="/1000108003_landscape_fixed.mp4"
-          alt=""
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            e.target.src = '/login-bg.png'
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-transparent to-white/60 dark:to-black/60" />
-      </div>
-
-      <div className="relative z-10 mx-auto w-full max-w-5xl px-4 sm:px-6">
-        <div className="w-full min-h-[520px] bg-white/95 dark:bg-cozy-dark/95 backdrop-blur-md rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col">
-          <div className="flex flex-1 flex-col lg:flex-row min-h-0">
-            {/* Form / pricing */}
-            <div className="flex-1 flex flex-col justify-center px-6 md:px-10 lg:px-12 py-8 lg:py-10 overflow-y-auto custom-scrollbar">
-              {view === 'pricing' ? (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setView('signin')}
-                    className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 font-sans mb-4 transition-colors self-start"
-                  >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    Back to sign in
-                  </button>
-                  <JoinUsPricing onSelectPlan={handleSelectPlan} compact variant="light" />
-                </>
-              ) : (
-                <>
-                  <p className="text-[11px] font-sans font-semibold uppercase tracking-[0.2em] text-gray-400 mb-2">
-                    {view === 'signup' ? 'Start for free' : 'Welcome back'}
-                  </p>
-                  <h1 className="text-2xl md:text-3xl font-display font-bold text-cozy-dark dark:text-cozy-light mb-1">
-                    {view === 'signup' ? (
-                      <>Create new account<span className="text-blue-500">.</span></>
-                    ) : (
-                      <>Sign in with email<span className="text-blue-500">.</span></>
-                    )}
-                  </h1>
-                  <p className="text-sm text-gray-500 font-sans mb-8">
-                    {view === 'signup'
-                      ? 'Join the student-first innovation ecosystem.'
-                      : 'Access events, AI tools, and your student dashboard.'}
-                  </p>
-
-                  <form onSubmit={handleSubmit} className="space-y-3">
-                    {view === 'signup' && (
-                      <div className="grid grid-cols-2 gap-3">
-                        <FormField
-                          label="First name"
-                          type="text"
-                          value={form.firstName}
-                          onChange={updateField('firstName')}
-                          icon={User}
-                        />
-                        <FormField
-                          label="Last name"
-                          type="text"
-                          value={form.lastName}
-                          onChange={updateField('lastName')}
-                          icon={User}
-                        />
-                      </div>
-                    )}
-
-                    <FormField
-                      label="Email"
-                      type="email"
-                      value={form.email}
-                      onChange={updateField('email')}
-                      icon={Mail}
-                    />
-
-                    <FormField
-                      label="Password"
-                      type={showPassword ? 'text' : 'password'}
-                      value={form.password}
-                      onChange={updateField('password')}
-                      icon={Lock}
-                      rightSlot={
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="text-gray-400 hover:text-gray-600 transition-colors"
-                        >
-                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                        </button>
-                      }
-                    />
-
-                    {view === 'signin' && (
-                      <div className="flex justify-end">
-                        <button type="button" className="text-xs font-sans font-semibold text-gray-500 hover:text-blue-500 transition-colors">
-                          Forgot password?
-                        </button>
-                      </div>
-                    )}
-
-                    <div className="flex gap-3 pt-2">
-                      {view === 'signup' && (
-                        <button
-                          type="button"
-                          onClick={() => setView('pricing')}
-                          className="flex-1 py-3 rounded-full bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/15 text-cozy-dark dark:text-cozy-light text-sm font-sans font-semibold transition-colors"
-                        >
-                          View plans
-                        </button>
-                      )}
-                      <button
-                        type="submit"
-                        className={`py-3 rounded-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-sans font-semibold transition-all active:scale-[0.98] ${
-                          view === 'signup' ? 'flex-1' : 'w-full'
-                        }`}
-                      >
-                        {view === 'signup' ? 'Create account' : 'Get Started'}
-                      </button>
-                    </div>
-                  </form>
-
-                  {view === 'signin' && (
-                    <>
-                      <div className="flex items-center gap-3 my-6">
-                        <div className="flex-1 border-t border-dotted border-gray-200 dark:border-white/10" />
-                        <span className="text-[11px] text-gray-400 font-sans">Or sign in with</span>
-                        <div className="flex-1 border-t border-dotted border-gray-200 dark:border-white/10" />
-                      </div>
-
-                      <div className="flex justify-center gap-3">
-                        {['Google', 'GitHub', 'Apple'].map((provider) => (
-                          <button
-                            key={provider}
-                            type="button"
-                            className="w-12 h-12 rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 flex items-center justify-center text-xs font-sans font-semibold text-gray-500 hover:text-cozy-dark transition-all"
-                          >
-                            {provider[0]}
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  )}
-
-                  <p className="mt-6 text-sm text-gray-500 font-sans text-center">
-                    {view === 'signup' ? (
-                      <>
-                        Already a member?{' '}
-                        <button type="button" onClick={() => setView('signin')} className="text-blue-500 font-semibold hover:underline">
-                          Log In
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        New here?{' '}
-                        <button type="button" onClick={() => setView('signup')} className="text-blue-500 font-semibold hover:underline">
-                          Create account
-                        </button>
-                        {' · '}
-                        <button type="button" onClick={() => setView('pricing')} className="text-blue-500 font-semibold hover:underline">
-                          View plans
-                        </button>
-                      </>
-                    )}
-                  </p>
-                </>
-              )}
+    <div className="min-h-screen w-full flex items-center justify-center bg-cozy-light dark:bg-cozy-dark">
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center min-h-screen md:min-h-auto">
+          
+          {/* Left Side - Form */}
+          <div className="flex flex-col justify-center py-8 md:py-0">
+            {/* Header */}
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-8 h-8 rounded-lg bg-[#c84c30] flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">IH</span>
+                </div>
+                <span className="font-serif font-bold text-cozy-dark dark:text-cozy-light">InnoTech</span>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl font-display font-bold text-cozy-dark dark:text-cozy-light mb-3">
+                {mode === 'signin' ? 'Sign in' : 'Create Account'}
+              </h1>
+              
+              <p className="text-gray-600 dark:text-gray-400 text-base">
+                {mode === 'signin' 
+                  ? 'New to InnoTech? '
+                  : 'Already have an account? '
+                }
+                <button 
+                  onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
+                  className="text-[#c84c30] hover:text-[#a83c24] font-semibold"
+                >
+                  {mode === 'signin' ? 'Create an account.' : 'Sign in.'}
+                </button>
+              </p>
             </div>
 
-            {/* Illustration panel */}
-            <div className="hidden lg:flex relative w-[42%] shrink-0 bg-[#f4f9f6]/80 dark:bg-black/20 backdrop-blur-sm border-l border-gray-100 dark:border-white/10">
-              <LoginIllustration />
+            {/* Form Fields */}
+            <form onSubmit={handleSubmit} className="space-y-5">
+
+              {submitError && (
+                <div className="flex items-start gap-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                  <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
+                  <p className="text-sm text-red-700 dark:text-red-300">{submitError}</p>
+                </div>
+              )}
+
+              {/* Signup name fields */}
+              {mode === 'signup' && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">First Name</label>
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={form.firstName}
+                      onChange={handleChange}
+                      placeholder="Enter your first name"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-cozy-light dark:bg-cozy-dark/50 text-cozy-dark dark:text-cozy-light placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#c84c30] transition"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Last Name</label>
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={form.lastName}
+                      onChange={handleChange}
+                      placeholder="Enter your last name"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-cozy-light dark:bg-cozy-dark/50 text-cozy-dark dark:text-cozy-light placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#c84c30] transition"
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                    className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-cozy-light dark:bg-cozy-dark/50 text-cozy-dark dark:text-cozy-light placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#c84c30] transition"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    className="w-full pl-12 pr-12 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-cozy-light dark:bg-cozy-dark/50 text-cozy-dark dark:text-cozy-light placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#c84c30] transition"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-3.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Remember me & Forgot password */}
+              {mode === 'signin' && (
+                <div className="flex items-center justify-between pt-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="rememberMe"
+                      checked={form.rememberMe}
+                      onChange={handleChange}
+                      className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-400">Remember for 30 days</span>
+                  </label>
+                  <button type="button" className="text-sm text-[#c84c30] hover:text-[#a83c24] font-semibold">
+                    Forgot password?
+                  </button>
+                </div>
+              )}
+
+              {/* Sign In Button */}
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full py-3.5 rounded-lg bg-[#c84c30] hover:bg-[#a83c24] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold transition-colors active:scale-[0.98] mt-6"
+              >
+                {submitting
+                  ? (mode === 'signin' ? 'Signing in…' : 'Creating account…')
+                  : (mode === 'signin' ? 'Sign in' : 'Create account')}
+              </button>
+            </form>
+
+            {/* OAuth */}
+            <div className="mt-8">
+              <div className="relative mb-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-cozy-light dark:bg-cozy-dark text-gray-600 dark:text-gray-400">or continue with</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-2 py-3 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-cozy-dark/50 transition"
+                >
+                  <Globe className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                  <span className="text-sm font-semibold text-cozy-dark dark:text-cozy-light">Google</span>
+                </button>
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-2 py-3 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-cozy-dark/50 transition"
+                >
+                  <Apple className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                  <span className="text-sm font-semibold text-cozy-dark dark:text-cozy-light">Apple</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side - Illustration */}
+          <div className="hidden lg:flex items-center justify-center relative">
+            <div className="w-full max-w-md aspect-square relative">
+              {/* Abstract geometric shapes */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                {/* Background shapes - using brand colors */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#c84c30]/20 dark:bg-[#c84c30]/10 rounded-full opacity-70"></div>
+                <div className="absolute bottom-0 left-0 w-40 h-40 bg-[#8ab4f8]/15 dark:bg-[#8ab4f8]/10 rounded-full opacity-50"></div>
+                <div className="absolute top-1/2 left-1/4 w-20 h-20 bg-[#c84c30]/10 dark:bg-[#c84c30]/5 rounded-full opacity-60"></div>
+                
+                {/* Grid pattern */}
+                <div className="absolute inset-0 opacity-5 dark:opacity-10"
+                  style={{
+                    backgroundImage: 'linear-gradient(0deg, transparent 24%, #c84c30 25%, #c84c30 26%, transparent 27%, transparent 74%, #c84c30 75%, #c84c30 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, #c84c30 25%, #c84c30 26%, transparent 27%, transparent 74%, #c84c30 75%, #c84c30 76%, transparent 77%, transparent)',
+                    backgroundSize: '50px 50px'
+                  }}
+                />
+
+                {/* Chevron pattern */}
+                <div className="absolute right-12 top-1/3 w-20 h-24 opacity-40">
+                  <svg viewBox="0 0 100 150" className="w-full h-full text-[#c84c30]" fill="currentColor">
+                    <path d="M 20 30 L 50 60 L 80 30" stroke="currentColor" strokeWidth="3" fill="none" />
+                    <path d="M 20 60 L 50 90 L 80 60" stroke="currentColor" strokeWidth="3" fill="none" />
+                    <path d="M 20 90 L 50 120 L 80 90" stroke="currentColor" strokeWidth="3" fill="none" />
+                  </svg>
+                </div>
+
+                {/* Decorative elements */}
+                <div className="absolute bottom-1/4 right-1/4 w-16 h-16 border-2 border-[#c84c30]/40 dark:border-[#c84c30]/30 rounded-lg opacity-40 transform rotate-45"></div>
+                <div className="absolute top-1/4 left-1/3 w-12 h-12 border-4 border-dotted border-[#8ab4f8]/50 dark:border-[#8ab4f8]/40 rounded-full opacity-30"></div>
+              </div>
+
+              {/* Center flower-like shape - primary brand color */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-24 h-24 relative">
+                  {[0, 72, 144, 216, 288].map((angle) => (
+                    <div
+                      key={angle}
+                      className="absolute w-8 h-8 bg-[#c84c30] dark:bg-[#c84c30] rounded-full opacity-80"
+                      style={{
+                        transform: `rotate(${angle}deg) translateY(-48px) rotate(-${angle}deg)`,
+                      }}
+                    />
+                  ))}
+                  <div className="absolute inset-4 bg-[#c84c30] dark:bg-[#c84c30] rounded-full" />
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -1,14 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { BarChart2, TrendingUp } from 'lucide-react'
 import { useAppStore } from '../store/useAppStore'
 import ScrollRevealText from '../components/ScrollRevealText'
 
 export default function GrowthDashboardSection() {
-  const { openModal } = useAppStore()
+  const navigate = useNavigate()
+  const { isLoggedIn } = useAppStore()
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef(null)
 
   useEffect(() => {
+    const node = sectionRef.current
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -18,14 +21,22 @@ export default function GrowthDashboardSection() {
       { threshold: 0.3 }
     )
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
+    if (node) {
+      observer.observe(node)
     }
 
     return () => {
-      if (sectionRef.current) observer.unobserve(sectionRef.current)
+      if (node) observer.unobserve(node)
     }
   }, [])
+
+  const handleDashboardClick = () => {
+    if (isLoggedIn) {
+      navigate('/dashboard')
+    } else {
+      navigate('/login')
+    }
+  }
 
   const profileModules = [
     "Registered Events",
@@ -145,7 +156,7 @@ export default function GrowthDashboardSection() {
 
       {/* Button */}
       <button 
-        onClick={() => openModal('dashboard')}
+        onClick={handleDashboardClick}
         className="flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#c84c30] hover:bg-[#b04027] text-white font-sans text-sm font-semibold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm"
       >
         <BarChart2 className="w-4 h-4" />

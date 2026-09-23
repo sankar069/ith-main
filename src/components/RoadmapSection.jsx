@@ -1,7 +1,56 @@
 import React, { useEffect, useState, useRef } from 'react';
 import ScrollReveal from '../components/ScrollReveal';
 import CountUp from '../components/CountUp';
-import { Check } from 'lucide-react';
+import { Check, ListChecks } from 'lucide-react';
+
+const STATUS_LABEL = {
+  planning: { label: 'Planning', className: 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300' },
+  in_progress: { label: 'In Progress', className: 'bg-[#c84c30]/10 text-[#c84c30]' },
+  completed: { label: 'Completed', className: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' },
+}
+
+function FeatureTracker() {
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/roadmap')
+      .then((r) => r.json())
+      .then((data) => setItems(data.items || []))
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading || items.length === 0) return null
+
+  return (
+    <div className="w-full max-w-4xl mb-20">
+      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#f0e6e3] dark:border-gray-800 bg-white/50 dark:bg-black/20 text-[10px] font-bold text-[#c84c30] uppercase mb-6 tracking-widest">
+        <ListChecks className="w-3 h-3" /> Live Feature Tracker
+      </div>
+      <div className="border border-[#f0e6e3] dark:border-gray-800 rounded-3xl bg-[#FCFDFD] dark:bg-black/40 divide-y divide-[#f0e6e3] dark:divide-gray-800 overflow-hidden">
+        {items.map((item) => {
+          const status = STATUS_LABEL[item.status] || STATUS_LABEL.planning
+          return (
+            <div key={item.id} className="flex items-center justify-between gap-4 px-6 py-4">
+              <p className="text-sm font-semibold text-cozy-dark dark:text-cozy-light">{item.feature_name}</p>
+              <div className="flex items-center gap-3 shrink-0">
+                {item.target_date && (
+                  <span className="text-xs text-gray-400 dark:text-gray-500">
+                    {new Date(item.target_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                  </span>
+                )}
+                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${status.className}`}>
+                  {status.label}
+                </span>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
 
 function PhaseCard({ phase, delay }) {
   const [inView, setInView] = useState(false);
@@ -119,6 +168,8 @@ export default function RoadmapSection() {
           </ScrollReveal>
         ))}
       </div>
+
+      <FeatureTracker />
 
       {/* Development Phases Section */}
       <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#f0e6e3] dark:border-gray-800 bg-white/50 dark:bg-black/20 text-[10px] font-bold text-[#c84c30] uppercase mb-6 tracking-widest">
